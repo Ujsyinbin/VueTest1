@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>test</title>
+		<script src="js/vue.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<style>
+		#red span{color: red;}
+	</style>
+	<body>
+		<div id="app">
+			<input v-model="goods" />
+			<button @click="create">添加</button><br>
+			<comgoods v-bind:total="total"></comgoods>
+		</div>
+		
+		
+		<script>
+			Vue.component("comgoods",{
+				props:['total'],
+				data:function(){
+					return{
+					}
+				},
+				methods:{
+					remove:function(index){
+						this.total.splice(index,1)
+					}
+				},
+				components:{
+					"itemgoods":{
+						data:function(){
+							return{
+								number:0,
+							}
+						},
+						methods:{
+							add:function(){
+								this.number++;
+							},
+							subtract:function(){
+								this.number--;
+							},
+							remove:function(){
+								this.total.splice(this.index,1)
+							}
+						},
+						template:`
+						<div style="display:inline-block">
+							<button @click='add'>+</button>
+							{{number}}
+							<button @click='subtract'>-</button>
+						</div>
+						`
+					},
+				},
+				template:`
+				<div>
+				<div v-for="(value,index) in total" :key='index'>
+					{{value}}
+					<itemgoods></itemgoods>
+					<button @click='remove(index)'>Remove</button>
+				</div>
+				</div>
+				`
+			})
+			var app = new Vue({
+				el:'#app',
+				data:{
+					goods:"",
+					total:[],
+				},
+				methods:{
+					create:function(){
+						if(this.goods==""){
+							this.goods="default"
+						}
+						this.total.push(this.goods)
+						this.goods=''
+					},
+				},
+			}) 
+		</script>
+	</body>
+</html>
